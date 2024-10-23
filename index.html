@@ -127,7 +127,7 @@
           const selectedTopic = ref(null);
           const topics = {
             AI_TUYEN_SI: {
-              name: "AI Tuyển sỉ",
+              name: "AI TUYỂN SỈ",
               icon: "/image/tuyensi.svg",
               suggestions: [
                 {
@@ -161,7 +161,7 @@
               ],
             },
             AI_BAN_HANG: {
-              name: "AI Bán hàng",
+              name: "AI BÁN HÀNG",
               icon: "/image/banhang.svg",
               suggestions: [
                 {
@@ -191,7 +191,7 @@
               ],
             },
             AI_SAN_PHAM: {
-              name: "AI Sản phẩm",
+              name: "AI SẢN PHẨM",
               icon: "/image/sanpham.svg",
               suggestions: [
                 {
@@ -209,7 +209,7 @@
               ],
             },
             AI_CHIEN_lUOC: {
-              name: "AI Chiến lược kinh doanh",
+              name: "AI CHIẾN LƯỢC KINH DOANH",
               icon: "/image/chienluoc.svg",
               suggestions: [
                 {
@@ -227,7 +227,7 @@
               ],
             },
             AI_NGUOI_MOI: {
-              name: "AI Kinh doanh cho người mới",
+              name: "AI KINH DOANH CHO NGƯỜI MỚI",
               icon: "/image/nguoimoi.svg",
               suggestions: [
                 {
@@ -254,7 +254,7 @@
               ],
             },
             AI_DOANH_NGHIEP: {
-              name: "AI Hồ sơ doanh nghiệp",
+              name: "AI HỒ SƠ DOANH NGHIỆP",
               icon: "/image/hoso.svg",
               suggestions: [
                 {
@@ -281,7 +281,7 @@
               ],
             },
             AI_THUONG_HIEU: {
-              name: "AI Thương hiệu cá nhân",
+              name: "AI THƯƠNG HIỆU CÁ NHÂN",
               icon: "/image/thuonghieu.svg",
               suggestions: [
                 {
@@ -303,7 +303,7 @@
               ],
             },
             AI_DAO_TAO: {
-              name: "AI Đào tạo",
+              name: "AI ĐÀO TẠO",
               icon: "/image/daotao.svg",
               suggestions: [
                 {
@@ -332,13 +332,176 @@
                 },
               ],
             },
+            AI_XAY_KENH: {
+              name: "AI XÂY KÊNH TRIỆU VIEW",
+              icon: "/image/xaykenh.svg",
+              suggestions: [],
+            },
+            AI_CONTENT: {
+              name: "AI KẾ HOẠCH CONTENT",
+              icon: "/image/content.svg",
+              suggestions: [
+                {
+                  image: "/image/content/sangtao.svg",
+                  content: "Sáng tạo tiêu đề",
+                },
+                {
+                  image: "/image/content/kichban.svg",
+                  content: "Viết kịch bản ",
+                },
+                {
+                  image: "/image/content/outline.svg",
+                  content: "Lên outline kịch bản",
+                },
+                {
+                  image: "/image/content/banhang.svg",
+                  content: "Kịch bản bán hàng",
+                },
+                {
+                  image: "/image/content/hashtag.svg",
+                  content: "Hash tag và cách chuẩn seo",
+                },
+              ],
+            },
+            AI_NANG_SUAT: {
+              name: "AI X3 NĂNG SUẤT CÔNG VIỆC",
+              icon: "/image/tangtruong.svg",
+              suggestions: [],
+            },
+            AI_THAU_HIEU: {
+              name: "AI THẤU HIỂU BẢN THÂN",
+              icon: "/image/thauhieu.svg",
+              suggestions: [
+                {
+                  image: "/image/thauhieu/nangluc.svg",
+                  content: "Nhóm tính cách năng lực hành vi, ưu nhược điểm",
+                },
+              ],
+            },
+            AI_BDS: {
+              name: "AI BẤT ĐỘNG SẢN",
+              icon: "/image/bds.svg",
+              suggestions: [
+                {
+                  image: "/image/bds/phantich.svg",
+                  content: "Phân tích đánh giá vĩ mô bất động sản",
+                },
+                {
+                  image: "/image/bds/thoidiem.svg",
+                  content: "Thời điểm đầu tư",
+                },
+                {
+                  image: "/image/bds/khuvuc.svg",
+                  content: "Đánh giá các khu vực ",
+                },
+                {
+                  image: "/image/bds/sosanh.svg",
+                  content: "So sánh giá các khu vực",
+                },
+              ],
+            },
+            AI_TAI_CHINH: {
+              name: "AI TÀI CHÍNH",
+              icon: "/image/taichinh.svg",
+              suggestions: [
+                {
+                  image: "/image/taichinh/laisuat.svg",
+                  content: "Phân tích xu hướng lãi xuất",
+                },
+                {
+                  image: "/image/taichinh/thitruong.svg",
+                  content: "Phân tích vĩ mô ảnh hưởng tới thị trường tài chính",
+                },
+                {
+                  image: "/image/taichinh/giavang.svg",
+                  content: "Dự đoán giá vàng",
+                },
+                {
+                  image: "/image/taichinh/chungkhoan.svg",
+                  content: "Dự đoán thị trường chứng khoán",
+                },
+              ],
+            },
+            AI_VIET_SACH: {
+              name: "AI VIẾT SÁCH",
+              icon: "/image/book.svg",
+              suggestions: [
+                {
+                  image: "/image/vietsach/chude.svg",
+                  content: "Tìm chủ đề hot",
+                },
+                {
+                  image: "/image/vietsach/bocuc.svg",
+                  content: "Xây dựng bố cục sách",
+                },
+                {
+                  image: "/image/vietsach/banthao.svg",
+                  content: "Bản thảo chi tiết",
+                },
+              ],
+            },
+            AI_PHAP_LUAT: {
+              name: "AI PHÁP LUẬT",
+              icon: "/image/phapluat.svg",
+              suggestions: [
+                {
+                  image: "/image/phapluat/vanban.svg",
+                  content: "Mẫu văn bản pháp lý",
+                },
+                {
+                  image: "/image/phapluat/tracuu.svg",
+                  content: "Tra cứu điều luật",
+                },
+              ],
+            },
+            AI_SUC_KHOE: {
+              name: "AI SỨC KHỎE",
+              icon: "/image/suckhoe.svg",
+              suggestions: [],
+            },
+            AI_TRUYEN_TRANH: {
+              name: "AI SÁNG TÁC TRUYỆN TRANH",
+              icon: "/image/truyentranh.svg",
+              suggestions: [],
+            },
+            AI_BAI_GIANG: {
+              name: "AI TẠO BÀI GIẢNG",
+              icon: "/image/baigiang.svg",
+              suggestions: [],
+            },
+            AI_NUOI_CON: {
+              name: "AI NUÔI DẠY CON",
+              icon: "/image/nuoicon.svg",
+              suggestions: [
+                {
+                  image: "/image/nuoicon/dotuoi.svg",
+                  content: "Đặc điểm tính cách độ tuổi",
+                },
+                {
+                  image: "/image/nuoicon/hanhxu.svg",
+                  content: "Hành xử đúng của ba mẹ trong độ tuổi của con",
+                },
+                {
+                  image: "/image/nuoicon/ngontu.svg",
+                  content: "Ngôn từ thôi miên dành cho con",
+                },
+              ],
+            },
           };
 
           const selectTopic = (key) => {
-            selectedTopic.value = key;
             // window.location.href = `chat.html?question=${encodeURIComponent(
             //   key
             // )}`;
+
+            console.log(topics[key]);
+            if (topics[key].suggestions.length === 0) {
+              window.location.href = `chat.html?question=${encodeURIComponent(
+                topics[key].name
+              )}`;
+            } else {
+              selectedTopic.value = key;
+            }
           };
 
           const selectSuggestion = (suggestion) => {
