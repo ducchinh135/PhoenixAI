@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PHOENIX AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=ww5IVhWH"></script>
+    <style>
+      /* CSS cho popup */
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        z-index: 1000;
+      }
+      .popup.show {
+        display: block;
+      }
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+      }
+      .popup-overlay.show {
+        display: block;
+      }
+
+      /* Typing loader animation */
+      .typing-container {
+        display: flex;
+        align-items: center;
+        font-style: italic;
+        color: #555;
+      }
+
+      .typing-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #555;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: typingDot 1.5s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      .suggestions {
+        background: white;
+        max-height: auto;
+        overflow-y: auto;
+      }
+      .suggestion-item {
+        padding: 10px;
+        cursor: pointer;
+      }
+      .suggestion-item:hover {
+        background-color: #f0f0f0;
+      }
+
+      @keyframes typingDot {
+        0%,
+        100% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="app"
+      class="relative min-h-screen py-8 bg-gray-100 sm:px-6 sm:p-8 bg-background"
+      style="
+        background-image: url(/image/phuonghoang.png);
+        background-position: center;
+        background-repeat: repeat; /* Lặp lại hình ảnh */
+        background-size: auto; /* Hoặc có thể sử dụng 'auto' */
+      "
+    >
+      <div class="p-2 bg-white rounded-full w-fit">
+        <button class="flex" @click="handleBack">
+          <img src="/image/back-svgrepo-com.svg" alt="" class="w-8 pr-2" />
+          <p>Quay lại</p>
+        </button>
+      </div>
+      <!-- Hình ảnh bên trái -->
+      <!-- <div class="fixed left-0 top-0 h-full w-[0%] sm:w-1/6 md:w-1/5 xl:w-1/4">
+        <img
+          src="./image/sanphamHQ1.jpg"
+          alt="Left Image"
+          class="object-cover w-full h-full"
+        />
+      </div> -->
+      <!-- Nội dung chính -->
+      <div
+        class="max-w-2xl mx-auto relative w-[100%] sm:w-[50%] md:w-[60%] lg:w-[60%] xl:w-[80%]"
+      >
+        <div class="relative px-2">
+          <div class="flex items-center justify-center mb-4">
+            <h1
+              class="w-[80%] sm:w-[100%] text-2xl font-bold text-center text-[#ae0000] md:text-4xl"
+            >
+              PHOENIX AI
+            </h1>
+            <img
+              class="w-14 h-14"
+              src="./image/phoenixLogo.png"
+              alt="ChatGPT Icon"
+            />
+          </div>
+          <!-- Button cài đặt -->
+          <!-- <button
+            @click="toggleSettingsPopup"
+            class="absolute p-2 text-gray-500 top-4 right-4 hover:text-gray-700"
+            aria-label="Cài đặt"
+          >
+            <i class="fas fa-cog fa-lg"></i>
+          </button> -->
+
+          <div class="p-1 bg-white rounded-lg shadow sm:p-6">
+            <div class="flow-root">
+              <div class="mt-2 mb-2 sm:mt-4">
+                <!-- Chat Messages -->
+                <ul>
+                  <li
+                    class="py-3 sm:py-4"
+                    v-for="message in messages"
+                    :key="message.id"
+                  >
+                    <div
+                      class="flex items-start gap-4"
+                      :class="messageClasses(message.role)"
+                    >
+                      <div
+                        v-if="message.role === 'user'"
+                        class="relative p-2 break-normal whitespace-pre-line bg-gray-100 rounded-lg shadow-md sm:p-4"
+                      >
+                        <span v-if="message.role === 'user'" class="font-bold"
+                          >Bạn:</span
+                        >
+                        {{ message.content }}
+                      </div>
+                      <div
+                        v-if="message.role === 'assistant'"
+                        class="flex-shrink-0"
+                      >
+                        <img
+                          class="w-8 h-8 rounded-full"
+                          src="./image/phoenixLogo.png"
+                          alt="ChatGPT Icon"
+                        />
+                      </div>
+                      <div
+                        v-if="message.role !== 'user'"
+                        class="flex-1 min-w-0"
+                      >
+                        <p
+                          class="text-sm text-gray-800 break-normal whitespace-pre-line"
+                        >
+                          <span
+                            v-if="message.role === 'assistant'"
+                            class="font-bold"
+                            >Trợ lý:
+                          </span>
+                          <span
+                            v-html="formatMessageWithLinks(message.content)"
+                          ></span>
+                        </p>
+                        <!-- Biểu tượng loa để đọc nội dung -->
+                        <!-- <button
+                          v-if="message.role === 'assistant'"
+                          @click="speakMessage(message.content)"
+                          class="text-gray-500 hover:text-gray-700 ml-2 text-[10px]"
+                          aria-label="Đọc nội dung"
+                        >
+                          <i class="fas fa-volume-up fa-lg"></i>
+                        </button> -->
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+                <!-- Chat Input -->
+                <form @submit.prevent="sendMessage">
+                  <div class="flex sm:space-y-0 sm:space-x-3">
+                    <div class="w-[90%]">
+                      <textarea
+                        v-model="userInput"
+                        placeholder="Điền câu hỏi của bạn..."
+                        class="flex-1 w-full h-auto p-2 mr-1 rounded-md shadow-sm resize-none"
+                        rows="1"
+                        @keyup.enter="sendMessage"
+                        @focus="showAllSuggestions()"
+                        @input="filterSuggestions"
+                      ></textarea>
+                      <div v-if="showSuggestions" class="suggestions">
+                        <div
+                          v-for="suggestion in filteredSuggestions"
+                          :key="suggestion"
+                          @click="selectSuggestion(suggestion)"
+                          class="suggestion-item"
+                        >
+                          {{ suggestion }}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      class="flex items-center px-4 py-2 text-black rounded-md bg-amber-200 hover:bg-amber-300 h-[40px]"
+                    >
+                      <img
+                        class="w-4 h-4"
+                        src="./image/send-svgrepo-com.svg"
+                        alt="Send Icon"
+                      />
+                      Gửi
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Hình ảnh bên phải -->
+      <!-- <div class="fixed right-0 top-0 h-full w-[0%] sm:w-1/6 md:w-1/5 xl:w-1/4">
+        <img
+          src="./image/sanphamHQ2.jpg"
+          alt="Right Image"
+          class="object-cover w-full h-full"
+        />
+      </div> -->
+
+      <!-- Popup cài đặt -->
+    </main>
+
+    <script>
+      const { createApp, ref, nextTick, computed, onMounted, onBeforeUnmount } =
+        Vue;
+
+      const apiKey = "app-JsvvCtbaChgiY7b5nmGU9F3Q";
+
+      createApp({
+        setup() {
+          const userInput = ref("");
+          const messages = ref([]);
+          const isLoading = ref(false);
+          const showPopup = ref(false);
+          const settingsText = ref("");
+          const isFirstMessage = ref(true); // Biến cờ để theo dõi tin nhắn đầu tiên
+          const isTyping = ref(false);
+          const conversationId = ref("");
+          const parentMessageId = ref("");
+          const firstInput = ref(true);
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const question = urlParams.get("question");
+
+          const showSuggestions = ref(false); // Show suggestions flag
+          const suggestions = ref([]);
+
+          function loadSuggestions() {
+            switch (question) {
+              case "AI Tuyển sỉ":
+                suggestions.value = [
+                  "Cho tôi kịch bản tuyển sỉ của sản phẩm",
+                  "Cho tôi cách xử lý lời từ chối khi tuyển sỉ",
+                  "Cho tôi kịch bản tuyển sỉ trong 90 ngày",
+                  "Cho tôi cách nghiên cứu chiến lược tuyển sỉ của đối thủ",
+                  "Cho tôi kịch bản content tuyển sỉ",
+                  "Hãy viết cho tôi câu chuyện thành công trong đội nhóm",
+                ];
+                break;
+              case "AI Bán hàng":
+                suggestions.value = [
+                  "Cho tôi kịch bản bán hàng sản phẩm",
+                  "Cho tôi các xử lý lời từ chối khi bán hàng",
+                  "Cho tôi kịch bản bán hàng trong 90 ngày",
+                  "Cho tôi cách nghiên cứu chiến lược bán hàng của đối thủ",
+                  "Cho tôi kịch bản content bán hàng",
+                  "Hãy viết cho tôi cách chăm sóc khách hàng",
+                  "Cho tôi cách xử lý khiếu nại khách hàng",
+                ];
+                break;
+              case "AI Sản phẩm":
+                suggestions.value = [
+                  "Cho tôi thông tin của sản phẩm",
+                  "Cho tôi cách nghiên cứu thị trường sản phẩm",
+                  "Cho tôi cách tính toán giá thành sản phẩm",
+                  "Cho tôi cách tính toán giá bán sản phẩm",
+                  "Cho tôi cách tính toán chỉ tiêu doanh số cho sản phẩm",
+                ];
+                break;
+              case "AI Chiến lược kinh doanh":
+                suggestions.value = [
+                  "Cho tôi kế hoạch chiến lược thu hút khách hàng tiềm năng",
+                  "Cho tôi chiến lược tăng doanh số ngay lập tức",
+                  "Cho tôi chiến lược để khách hàng quay lại mua hàng",
+                  "Cho tôi chiến lược tăng doanh số trong 90 ngày",
+                ];
+                break;
+              case "AI Kinh doanh cho người mới":
+                suggestions.value = [
+                  "Cho tôi biết quy trình các bước dành cho người mới",
+                  "Cho tôi chiến lược ra đơn trong 110 ngày",
+                  "Cho tôi biết cách đào tạo văn hóa - sản phẩm - bán hàng - thương hiệu cá nhân",
+                  "Cho tôi biết cách xây thương hiệu cá nhân",
+                  "Cho tôi biết lộ trình học tập - phát triển",
+                ];
+                break;
+              case "AI Hồ sơ doanh nghiệp":
+                suggestions.value = [
+                  "Giới thiệu công ty: Tầm Nhìn sứ mệnh, giá trị cốt lõi",
+                  "Cho tôi biết văn hóa công ty",
+                  "Cho tôi biết sản phẩm của công ty",
+                  "Cho tôi biết thương hiệu của công ty",
+                  "Cho tôi biết lịch sử hình thành và phát triển của công ty",
+                ];
+                break;
+              case "AI Thương hiệu cá nhân":
+                suggestions.value = [
+                  "Cho tôi biết cách định vị thương hiệu cá nhân",
+                  "Cho tôi biết cách xây dựng thương hiệu cá nhân",
+                  "Cho tôi biết cách phát triển thương hiệu cá nhân",
+                  "Cho tôi biết cách tạo ra nội dung thương hiệu cá nhân",
+                ];
+                break;
+              case "AI Đào tạo":
+                suggestions.value = [
+                  "Cho tôi cách đào tạo bán hàng",
+                  "Cho tôi cách đào tạo văn hóa",
+                  "Cho tôi cách đào tạo tuyển sỉ",
+                  "Cho tôi cách đào tạo thương hiệu cá nhân",
+                  "Cho tôi cách đào tạo về mục tiêu và kế hoạch kinh doanh",
+                ];
+                break;
+              default:
+                // Default suggestions if question does not match predefined categories
+                suggestions.value = [];
+            }
+
+            // Show all suggestions initially
+            filteredSuggestions.value = [...suggestions.value];
+          }
+
+          const filteredSuggestions = ref([]);
+
+          // Filter suggestions based on user input
+          function filterSuggestions() {
+            if (firstInput.value) {
+              if (!userInput.value.trim()) {
+                filteredSuggestions.value = suggestions.value; // Show all if input is empty
+                return;
+              }
+              filteredSuggestions.value = suggestions.value.filter(
+                (suggestion) =>
+                  suggestion
+                    .toLowerCase()
+                    .includes(userInput.value.toLowerCase())
+              );
+            }
+          }
+          // Show all suggestions when input is focused
+          function showAllSuggestions() {
+            if (firstInput.value) {
+              console.log("Showing all suggestions");
+              filteredSuggestions.value = [...suggestions.value];
+              showSuggestions.value = true;
+            }
+          }
+
+          // Select a suggestion
+          function selectSuggestion(suggestion) {
+            userInput.value = suggestion;
+            showSuggestions.value = false; // Hide suggestions after selection
+          }
+
+          // Hide suggestions when clicking outside
+          function handleClickOutside(event) {
+            console.log("test");
+            const inputArea = document.querySelector("textarea");
+            const suggestionsBox = document.querySelector(".suggestions");
+
+            // If the click is outside of the input or suggestion box, hide the suggestions
+            if (
+              inputArea &&
+              suggestionsBox &&
+              !inputArea.contains(event.target) &&
+              !suggestionsBox.contains(event.target)
+            ) {
+              showSuggestions.value = false;
+            }
+          }
+
+          // Mount event listener to detect outside clicks
+          onMounted(() => {
+            loadSuggestions();
+            showSuggestions.value = true;
+            document.addEventListener("click", handleClickOutside);
+          });
+
+          // Cleanup event listener on component unmount
+          onBeforeUnmount(() => {
+            document.removeEventListener("click", handleClickOutside);
+          });
+
+          const messageClasses = (role) => ({
+            "text-right justify-end": role === "user",
+            "text-left justify-start": role === "assistant",
+          });
+
+          // Phương thức tạo cuộc trò chuyện
+
+          async function sendMessage() {
+            if (!userInput.value.trim()) return;
+
+            const contentInput = userInput.value;
+            userInput.value = "";
+
+            try {
+              // Append user message
+              messages.value.push({
+                role: "user",
+                content: contentInput,
+              });
+
+              // Add an initial message for the assistant
+              const allMessages = [
+                ...messages.value.map((msg) => ({
+                  role: msg.role,
+                  content: msg.content,
+                })),
+              ];
+
+              // Gửi tin nhắn sau khi đã tạo cuộc trò chuyện
+              const data = {
+                inputs: {}, // Chỉnh sửa nếu cần thiết cho các biến khác
+                query: contentInput, // Nội dung tin nhắn từ người dùng
+                response_mode: "streaming",
+                conversation_id: conversationId.value || "",
+                parent_message_id: parentMessageId.value || "",
+                user: "Dify", // Bạn có thể thay đổi giá trị này
+              };
+
+              const response = await fetch(
+                "https://dify.phoenixtech.vn/v1/chat-messages",
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${apiKey}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(data),
+                }
+              );
+
+              userInput.value = "";
+
+              const reader = response.body.getReader();
+              const decoder = new TextDecoder();
+              let result = "";
+
+              // Add an initial message for the assistant
+              // Add an initial message for the assistant
+              const assistantMessageIndex = messages.value.length;
+              messages.value.push({
+                role: "assistant",
+                content: "",
+              });
+
+              // Process the streaming response
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                result += decoder.decode(value, { stream: true });
+
+                // Process and update the content
+                const contentChunks = result
+                  .split("\n")
+                  .filter((line) => line.trim());
+
+                for (const chunk of contentChunks) {
+                  const jsonChunks = chunk
+                    .split("data: ")
+                    .filter((part) => part.trim());
+
+                  for (const jsonChunk of jsonChunks) {
+                    try {
+                      const data = JSON.parse(jsonChunk);
+
+                      switch (data.event) {
+                        case "agent_message":
+                          const content = data.answer || "";
+                          // Loại bỏ dấu *
+                          const textContent = content.replace(/\*/g, "");
+                          // Update the last assistant message with the new content
+                          const lastMessage =
+                            messages.value[assistantMessageIndex];
+                          lastMessage.content += textContent;
+
+                          nextTick(() => {
+                            // Cuộn xuống khi có tin nhắn mới
+                            const chatBox = document.querySelector(".chat-box");
+                            if (chatBox) {
+                              chatBox.scrollTop = chatBox.scrollHeight;
+                            }
+                          });
+                          break;
+
+                        case "agent_thought":
+                          console.log("Agent Thought:", data.thought);
+                          // Optionally handle agent thoughts
+                          break;
+
+                        case "tts_message":
+                          console.log("TTS Message:", data.audio);
+                          // Handle TTS message and play audio if needed
+                          break;
+
+                        case "tts_message_end":
+                          console.log("TTS Message End");
+                          // Handle the end of TTS message if needed
+                          break;
+
+                        case "message_end":
+                          console.log("Message End");
+                          isTyping.value = false;
+                          break;
+
+                        case "error":
+                          console.error("Error:", data.message);
+                          // Handle error event
+                          isTyping.value = false;
+                          break;
+
+                        case "message_file":
+                          // Handle file messages if needed
+                          break;
+
+                        case "message_replace":
+                          // Handle message replacement if needed
+                          break;
+
+                        default:
+                          console.log("Unknown event type:", data.event);
+                      }
+                      // Lưu conversation_id nếu chưa có
+                      if (!conversationId.value && data.conversation_id) {
+                        conversationId.value = data.conversation_id;
+                        console.log(
+                          "Lưu conversation_id:",
+                          conversationId.value
+                        );
+                      }
+
+                      // Lưu message_id để sử dụng cho parent_message_id ở tin nhắn tiếp theo
+                      if (data.message_id) {
+                        parentMessageId.value = data.message_id;
+                        console.log(
+                          "Cập nhật parentMessageId:",
+                          parentMessageId.value
+                        );
+                      }
+
+                      firstInput.value = false;
+                    } catch (error) {
+                      console.error("Error parsing JSON chunk", error);
+                    }
+                  }
+                }
+
+                console.log(messages.value);
+
+                // Clear the result after processing
+                result = "";
+              }
+            } catch (error) {
+              console.error("There was an error with the API request", error);
+            } finally {
+              isLoading.value = false;
+              isTyping.value = false; // Kết thúc trạng thái gõ chữ
+            }
+          }
+
+          function speakMessage(message) {
+            if (window.responsiveVoice) {
+              responsiveVoice.speak(message, "Vietnamese Female"); // Bạn có thể thay đổi giọng đọc và ngôn ngữ theo nhu cầu
+            } else {
+              console.error("ResponsiveVoice is not loaded");
+            }
+          }
+
+          function toggleSettingsPopup() {
+            showPopup.value = !showPopup.value;
+          }
+
+          function closeSettingsPopup() {
+            showPopup.value = false;
+          }
+
+          function saveSettings() {
+            // Lưu giá trị từ textarea vào biến settingsText
+            settingsText.value = settingsText.value.trim();
+            console.log("settingsText.value", settingsText.value);
+            closeSettingsPopup();
+          }
+
+          function formatMessageWithLinks(content) {
+            // Decode HTML entities if content is encoded
+            content = content.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
+            // Remove invalid or nested <a> tags
+            content = content.replace(/<a\s+href="<a\s+href="/g, '<a href="');
+            content = content.replace(/""\s*target="_blank".*?<\/a>/g, "");
+
+            // Handle Markdown links
+            content = content.replace(
+              /\[([^\]]+)\]\(([^)]+)\)/g,
+              (match, text, url) => {
+                const cleanUrl = url.trim().replace(/["']/g, "");
+                return `<a href="${cleanUrl}" target="_blank" class="text-blue-600 hover:underline">${text}</a>`;
+              }
+            );
+
+            // Handle plain URLs
+            const urlRegex = /https?:\/\/[^\s"<>]+[a-zA-Z0-9]/g;
+            content = content.replace(urlRegex, (url) => {
+              // Check if URL is already within an <a> tag
+              if (/<a.*?>.*?<\/a>/.test(content)) {
+                return url;
+              }
+              // Clean URL and return anchor tag
+              const cleanUrl = url.trim().replace(/["']/g, "");
+              return `<a href="${cleanUrl}" target="_blank" class="text-blue-600 hover:underline">${cleanUrl}</a>`;
+            });
+
+            // Handle bold Markdown (**text**)
+            content = content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+            return content;
+          }
+
+          const handleBack = () => {
+            // selectedTopic.value = key;
+            window.location.href = `index.html`;
+          };
+
+          return {
+            formatMessageWithLinks,
+            userInput,
+            messages,
+            messageClasses,
+            sendMessage,
+            isLoading,
+            speakMessage,
+            toggleSettingsPopup,
+            closeSettingsPopup,
+            saveSettings,
+            showPopup,
+            settingsText,
+            isTyping,
+            showSuggestions,
+            filteredSuggestions,
+            selectSuggestion,
+            filterSuggestions,
+            showAllSuggestions,
+            handleBack,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
