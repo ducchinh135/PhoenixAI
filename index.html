@@ -7,113 +7,351 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .fade-in {
-        animation: fadeIn 0.3s ease-in-out forwards;
-      }
-
-      .fade-out {
-        animation: fadeOut 0.3s ease-in-out forwards;
-      }
-
-      @keyframes fadeIn {
-        from {
+      @keyframes fadeInLeft {
+        0% {
           opacity: 0;
+          transform: translateX(-40px);
         }
-        to {
+        100% {
           opacity: 1;
+          transform: translateX(0);
         }
       }
 
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-        }
-        to {
+      @keyframes fadeInRight {
+        0% {
           opacity: 0;
+          transform: translateX(40px);
         }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes moveTopBottom {
+        0% {
+          transform: translateY(-20px);
+        }
+        50% {
+          transform: translateY(20px);
+        }
+        100% {
+          transform: translateY(-20px);
+        }
+      }
+
+      @keyframes moveLeftRight {
+        0% {
+          transform: translateX(-20px);
+        }
+        50% {
+          transform: translateX(20px);
+        }
+        100% {
+          transform: translateX(-20px);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1); /* Phóng to 10% */
+        }
+      }
+
+      .pulsing {
+        animation: pulse 1s ease-in-out infinite;
+      }
+
+      .moving-robot {
+        animation: moveTopBottom 5s linear infinite;
+      }
+
+      .moving-background {
+        animation: moveLeftRight 5s linear infinite;
+      }
+
+      .fade-in-left {
+        animation: fadeInLeft 1s ease-in-out;
+      }
+
+      .fade-in-right {
+        animation: fadeInRight 1s ease-in-out;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <div class="min-h-screen bg-gray-100">
-        <!-- <img
-          src="/image/bannerHQ.jpg"
-          alt=""
-          class="md:h-[60vh] w-full object-cover object-top"
-        /> -->
+      <div class="min-h-screen">
+        <div
+          style="background-color: rgb(0, 0, 87)"
+          class="flex items-center justify-around h-[60px] relative z-10"
+        >
+          <img
+            class="w-[150px]"
+            src="./image/logoPhoenix.svg"
+            alt="ChatGPT Icon"
+          />
+
+          <p class="text-2xl font-bold text-white">
+            PHOENIX AI - TRỢ LÝ AI, BỨT PHÁ TƯƠNG LAI
+          </p>
+        </div>
 
         <div
-          class="max-w-full min-h-screen px-4 py-12 mx-auto"
           style="
-            background-image: url(/image/phuonghoang.png);
-            background-position: center;
+            background-image: url(https://w.ladicdn.com/s1440x720/5c7362c6c417ab07e5196b05/720-20240314171913-nmea6.png);
+            background-position: 50% 50%;
             background-size: cover;
+            background-origin: content-box;
+            background-repeat: repeat;
+            background-attachment: scroll;
           "
+          class="absolute top-0 left-0 w-full h-full"
         >
-          <!-- Màn hình chọn chủ đề -->
+          <div class="min-h-screen px-[200px] pt-[120px] mx-auto">
+            <div style="overflow: hidden">
+              <div
+                style="
+                  background-image: url(https://w.ladicdn.com/s1900x950/5c7362c6c417ab07e5196b05/screen-4-20240314170727-xxinp.png);
+                  background-position: left top;
+                  background-size: cover;
+                  background-origin: content-box;
+                  background-repeat: no-repeat;
+                  background-attachment: scroll;
+                  pointer-events: none;
+                  mix-blend-mode: screen;
+                "
+                class="absolute top-0 left-0 w-[90%] h-full overflow-hidden moving-background"
+              ></div>
+            </div>
 
-          <h1
-            class="pb-4 text-2xl font-bold text-center text-[#ae0000] md:text-4xl font-sans"
-          >
-            PHOENIX AI
-          </h1>
+            <div class="absolute z-10">
+              <div
+                style="background-color: rgba(111, 167, 242, 0.3)"
+                class="px-12 py-2"
+              >
+                <p
+                  class="text-4xl uppercase"
+                  style="
+                    color: rgb(255, 255, 1);
+                    font-weight: bold;
+                    line-height: 1.6;
+                    background-size: cover;
+                    background-position: center center;
+                  "
+                >
+                  nâng tầm trí tuệ
+                </p>
+              </div>
+              <div
+                class="h-[32px] w-[40px] absolute -top-3 -left-3"
+                style="
+                  background-image: url(https://w.ladicdn.com/s350x350/5c7362c6c417ab07e5196b05/ngoac-1-20240314170735-clfdu.png);
+                  background-position: left top;
+                  background-size: cover;
+                  background-origin: content-box;
+                  background-repeat: no-repeat;
+                  background-attachment: scroll;
+                  pointer-events: none;
+                "
+              ></div>
+              <div
+                class="h-[30px] w-[40px] absolute -bottom-3 -right-3"
+                style="
+                  background-image: url(https://w.ladicdn.com/s350x350/5c7362c6c417ab07e5196b05/ngoac-2-20240314170728-xw56d.png);
+                  background-position: right bottom;
+                  background-size: cover;
+                  background-origin: content-box;
+                  background-repeat: no-repeat;
+                  background-attachment: scroll;
+                  pointer-events: none;
+                "
+              ></div>
+            </div>
 
-          <div
-            v-if="!selectedTopic"
-            class="grid grid-cols-2 gap-4 lg:grid-cols-4 fade-in"
-          >
-            <button
-              v-for="(topic, key) in topics"
-              :key="key"
-              @click="selectTopic(key)"
-              class="flex flex-col items-center p-4 h-[220px] text-center text-white transition-transform duration-300 ease-in-out rounded-lg bg-gradient-to-r from-[#680100] to-[#d40e01] transform hover:scale-105"
+            <div
+              style="
+                background-image: url(https://w.ladicdn.com/s900x500/5c7362c6c417ab07e5196b05/but-pha-20240314170728-kajqw.png);
+                background-position: left top;
+                background-size: cover;
+                background-origin: content-box;
+                background-repeat: no-repeat;
+                background-attachment: scroll;
+                pointer-events: none;
+                mix-blend-mode: screen;
+              "
+              class="absolute top-[210px] w-[580px] h-[160px] overflow-hidden fade-in-left"
+            ></div>
+
+            <div class="fade-in-left absolute top-[400px] text-2xl text-white">
+              Công cụ trợ lý đắc lực giúp
+              <br />
+              bứt phá doanh số kinh doanh mỗi ngày!
+            </div>
+
+            <div
+              class="flex absolute top-[500px] text-xl font-medium text-white items-center"
             >
-              <img
-                :src="topic.icon"
-                :alt="topic.name"
-                class="p-4 bg-white rounded-full w-[80px] object-contain mt-4"
-              />
-              <span class="mt-6 text-lg font-semibold">{{ topic.name }}</span>
-            </button>
+              <p class="w-[240px]">
+                Xây dựng Chiến Lược Kinh Doanh và Marketing nhanh chóng
+              </p>
+              <div class="w-[2px] bg-white mx-4 h-[50px]"></div>
+              <p class="w-[240px]">
+                Lên ý tưởng, sáng tạo nội dung, xây kênh chỉ trong vài thao tác
+              </p>
+              <div class="w-[3px] bg-white mx-4 h-[50px]"></div>
+              <p class="w-[220px]">Sở hữu bộ công cụ tạo ra KẾT QUẢ NGAY!!</p>
+            </div>
+
+            <div>
+              <div
+                class="absolute w-[500px] h-[600px] top-20 right-20 fade-in-right"
+                style="
+                  background-image: url(https://w.ladicdn.com/s950x1000/5c7362c6c417ab07e5196b05/may-20240314170727--cji0.png);
+                  background-position: left top;
+                  background-size: cover;
+                  background-origin: content-box;
+                  background-repeat: no-repeat;
+                  background-attachment: scroll;
+                  pointer-events: none;
+                "
+              ></div>
+
+              <div
+                class="absolute w-[160px] h-[200px] bottom-[20%] right-[30%] fade-in-right"
+              >
+                <div
+                  style="
+                    background-image: url(https://w.ladicdn.com/s500x500/5c7362c6c417ab07e5196b05/anh-1-20240314170728-jpwjp.png);
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-origin: content-box;
+                    background-attachment: scroll;
+                    pointer-events: none;
+                    width: 100%;
+                    height: 100%;
+                  "
+                ></div>
+              </div>
+
+              <div
+                class="absolute w-[120px] h-[200px] bottom-[22%] right-[32%] fade-in-right"
+              >
+                <div
+                  class="moving-robot"
+                  style="
+                    background-image: url(https://w.ladicdn.com/s450x450/5c7362c6c417ab07e5196b05/robot-may-20240314170728-3uqrq.png);
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-origin: content-box;
+                    background-attachment: scroll;
+                    pointer-events: none;
+                    width: 100%;
+                    height: 100%;
+                  "
+                ></div>
+              </div>
+            </div>
+
+            <a
+              href="https://ai.phoenixtech.vn/"
+              style="background-color: rgb(247, 91, 0)"
+              class="absolute px-6 py-4 border border-white rounded-full bottom-8 w-fit pulsing"
+            >
+              <button class="font-bold text-white uppercase">
+                Đăng ký/Đăng nhập
+              </button>
+            </a>
+
+            <a
+              href="https://ai.phoenixtech.vn/"
+              style="background-color: rgb(255, 255, 1)"
+              class="absolute left-0 px-6 py-4 border border-white rounded-full bottom-8 left-[500px] w-fit pulsing"
+            >
+              <button
+                class="font-bold uppercase"
+                style="color: rgb(0, 65, 206)"
+              >
+                TRẢI NGHIỆM PHOENIX AI
+              </button>
+            </a>
           </div>
 
-          <!-- Màn hình hiện gợi ý -->
           <div
-            v-if="selectedTopic !== null"
-            class="p-6 bg-gray-100 rounded-lg shadow-lg fade-in"
+            class="px-20 py-12"
+            style="
+              background-image: url(https://w.ladicdn.com/s1440x1731/5c7362c6c417ab07e5196b05/1020-20240315084733-s3pq3.jpg);
+              background-position: 50% 50%;
+              background-repeat: repeat;
+              background-size: cover;
+              background-attachment: scroll;
+              background-origin: content-box;
+            "
           >
-            <div class="flex items-center gap-4 mb-4">
-              <img
-                :src="topics[selectedTopic].icon"
-                :alt="topics[selectedTopic].name"
-                class="p-4 bg-white rounded-full w-[50px] h-[50px] object-contain"
-              />
-              <h2 class="text-2xl font-bold">
-                {{ topics[selectedTopic].name }}
-              </h2>
-            </div>
-            <div class="space-y-3">
+            <div
+              v-if="!selectedTopic"
+              class="grid grid-cols-2 gap-4 lg:grid-cols-4 fade-in"
+            >
               <button
-                v-for="(suggestion, index) in topics[selectedTopic].suggestions"
-                :key="index"
-                @click="selectSuggestion(topics[selectedTopic].name)"
-                class="flex items-center w-full p-3 text-left transition-colors duration-300 bg-white rounded-lg hover:bg-gray-200"
+                v-for="(topic, key) in topics"
+                :key="key"
+                @click="selectTopic(key)"
+                class="flex flex-col items-center p-4 h-[220px] text-center text-white transition-transform duration-300 ease-in-out rounded-lg bg-gradient-to-r from-[#00035c] to-[#005af7] transform hover:scale-105"
               >
                 <img
-                  :src="suggestion.image"
-                  :alt="suggestion.content"
-                  class="p-2 bg-gray-100 rounded-xl w-[60px] object-contain mr-2"
+                  :src="topic.icon"
+                  :alt="topic.name"
+                  class="p-4 bg-white rounded-full w-[80px] object-contain mt-4"
                 />
-                <span class="text-lg font-bold">{{ suggestion.content }}</span>
+                <span class="mt-6 text-lg font-semibold">{{ topic.name }}</span>
               </button>
             </div>
-            <button
-              @click="selectedTopic = null"
-              class="px-4 py-2 mt-6 transition-colors duration-200 bg-gray-200 rounded-lg hover:bg-gray-300"
+
+            <div
+              v-if="selectedTopic !== null"
+              class="p-6 bg-gray-100 rounded-lg shadow-lg fade-in"
             >
-              Quay lại
-            </button>
+              <div class="flex items-center gap-4 mb-4">
+                <img
+                  :src="topics[selectedTopic].icon"
+                  :alt="topics[selectedTopic].name"
+                  class="p-4 bg-white rounded-full w-[50px] h-[50px] object-contain"
+                />
+                <h2 class="text-2xl font-bold">
+                  {{ topics[selectedTopic].name }}
+                </h2>
+              </div>
+              <div class="space-y-3">
+                <button
+                  v-for="(suggestion, index) in topics[selectedTopic].suggestions"
+                  :key="index"
+                  @click="selectSuggestion(topics[selectedTopic].name)"
+                  class="flex items-center w-full p-3 text-left transition-colors duration-300 bg-white rounded-lg hover:bg-gray-200"
+                >
+                  <img
+                    :src="suggestion.image"
+                    :alt="suggestion.content"
+                    class="p-2 bg-gray-100 rounded-xl w-[60px] object-contain mr-2"
+                  />
+                  <span class="text-lg font-bold"
+                    >{{ suggestion.content }}</span
+                  >
+                </button>
+              </div>
+              <button
+                @click="selectedTopic = null"
+                class="px-4 py-2 mt-6 transition-colors duration-200 bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                Quay lại
+              </button>
+            </div>
           </div>
         </div>
       </div>

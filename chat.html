@@ -96,7 +96,7 @@
   <body>
     <main
       id="app"
-      class="relative min-h-screen py-8 bg-gray-100 sm:px-6 sm:p-8 bg-background"
+      class="relative min-h-screen py-8 overflow-hidden bg-gray-100 sm:px-6 sm:p-8 bg-background"
       style="
         background-image: url(/image/phuonghoang.png);
         background-position: center;
@@ -110,17 +110,9 @@
           <p>Quay lại</p>
         </button>
       </div>
-      <!-- Hình ảnh bên trái -->
-      <!-- <div class="fixed left-0 top-0 h-full w-[0%] sm:w-1/6 md:w-1/5 xl:w-1/4">
-        <img
-          src="./image/sanphamHQ1.jpg"
-          alt="Left Image"
-          class="object-cover w-full h-full"
-        />
-      </div> -->
-      <!-- Nội dung chính -->
+
       <div
-        class="max-w-2xl mx-auto relative w-[100%] sm:w-[50%] md:w-[60%] lg:w-[60%] xl:w-[80%]"
+        class="max-w-4xl mx-auto relative w-[100%] sm:w-[50%] md:w-[60%] lg:w-[60%] xl:w-[100%] overflow-y-auto"
       >
         <div class="relative px-2">
           <div class="flex items-center justify-center mb-4">
@@ -135,18 +127,10 @@
               alt="ChatGPT Icon"
             />
           </div>
-          <!-- Button cài đặt -->
-          <!-- <button
-            @click="toggleSettingsPopup"
-            class="absolute p-2 text-gray-500 top-4 right-4 hover:text-gray-700"
-            aria-label="Cài đặt"
-          >
-            <i class="fas fa-cog fa-lg"></i>
-          </button> -->
 
           <div class="p-1 bg-white rounded-lg shadow sm:p-6">
             <div class="flow-root">
-              <div class="mt-2 mb-2 sm:mt-4">
+              <div class="mt-2 mb-2 overflow-y-auto sm:mt-4 max-h-[64vh]">
                 <!-- Chat Messages -->
                 <ul>
                   <li
@@ -249,16 +233,6 @@
           </div>
         </div>
       </div>
-      <!-- Hình ảnh bên phải -->
-      <!-- <div class="fixed right-0 top-0 h-full w-[0%] sm:w-1/6 md:w-1/5 xl:w-1/4">
-        <img
-          src="./image/sanphamHQ2.jpg"
-          alt="Right Image"
-          class="object-cover w-full h-full"
-        />
-      </div> -->
-
-      <!-- Popup cài đặt -->
     </main>
 
     <script>
